@@ -6,6 +6,7 @@ export default function App() {
     "Mai due giorni consecutivi nella stessa sede",
     "Minimo 2 giorni a settimana in ciascuna sede",
   ]);
+  const [nuovoVincolo, setNuovoVincolo] = useState("");
 
   const [turni, setTurni] = useState([
     { giorno: "Lunedì", sede: "", orario: "" },
@@ -26,6 +27,13 @@ export default function App() {
     alert("Funzione di generazione turni in sviluppo.");
   };
 
+  const aggiungiVincolo = () => {
+    if (nuovoVincolo.trim() !== "") {
+      setVincoli([...vincoli, nuovoVincolo]);
+      setNuovoVincolo("");
+    }
+  };
+
   return (
     <div style={{ padding: '1rem' }}>
       <h1>Planner Automatico</h1>
@@ -35,6 +43,16 @@ export default function App() {
           <ul>
             {vincoli.map((v, idx) => <li key={idx}>{v}</li>)}
           </ul>
+          <input
+            type="text"
+            placeholder="Aggiungi un nuovo vincolo"
+            value={nuovoVincolo}
+            onChange={(e) => setNuovoVincolo(e.target.value)}
+            style={{ padding: '0.5rem', width: '100%', marginTop: '1rem' }}
+          />
+          <button onClick={aggiungiVincolo} style={{ marginTop: '0.5rem' }}>
+            Aggiungi vincolo
+          </button>
         </div>
         <div>
           <h2>Calendario</h2>
