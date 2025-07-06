@@ -1,3 +1,9 @@
+"@fullcalendar/react": "^6.1.10",
+"@fullcalendar/daygrid": "^6.1.10",
+"@fullcalendar/timegrid": "^6.1.10",
+"@fullcalendar/interaction": "^6.1.10",
+"@fullcalendar/common": "^6.1.10"
+
 {
   "name": "turni-uffici",
   "version": "1.0.0",
