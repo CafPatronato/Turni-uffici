@@ -1,4 +1,11 @@
 import { useState } from "react";
+import FullCalendar from "@fullcalendar/react";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import interactionPlugin from "@fullcalendar/interaction";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import "@fullcalendar/common/main.css";
+import "@fullcalendar/timegrid/main.css";
+import "@fullcalendar/daygrid/main.css";
 
 export default function App() {
   const vincoliFissi = [
@@ -14,7 +21,7 @@ export default function App() {
   const [nuovoVincolo, setNuovoVincolo] = useState("");
 
   const [turni, setTurni] = useState([
-    { giorno: "Lunedì", sede: "", orario: "" },
+    { giorno: "Lunedì", sede: "Corsico", orario: "09:00 - 13:00 / 14:00 - 18:00" },
     { giorno: "Martedì", sede: "Cesano Boscone", orario: "09:00 - 13:00 / 14:00 - 18:00" },
     { giorno: "Mercoledì", sede: "Corsico", orario: "09:00 - 13:00 / 14:00 - 18:00" },
     { giorno: "Giovedì", sede: "Corsico", orario: "09:00 - 13:00 / 14:00 - 18:00" },
@@ -39,6 +46,43 @@ export default function App() {
     nuoviTurni[index][campo] = valore;
     setTurni(nuoviTurni);
   };
+
+  const eventiCalendario = turni.map((turno, index) => {
+    const giorni = {
+      "Lunedì": 1,
+      "Martedì": 2,
+      "Mercoledì": 3,
+      "Giovedì": 4,
+      "Venerdì": 5,
+    };
+
+    const giornoIndex = giorni[turno.giorno];
+    const date = new Date();
+    const startOfWeek = new Date(date.setDate(date.getDate() - date.getDay() + giornoIndex));
+    const startMorning = new Date(startOfWeek);
+    startMorning.setHours(9, 0);
+    const endMorning = new Date(startOfWeek);
+    endMorning.setHours(13, 0);
+    const startAfternoon = new Date(startOfWeek);
+    startAfternoon.setHours(14, 0);
+    const endAfternoon = new Date(startOfWeek);
+    endAfternoon.setHours(18, 0);
+
+    return [
+      {
+        title: `${turno.sede} - Mattina`,
+        start: startMorning,
+        end: endMorning,
+        allDay: false,
+      },
+      {
+        title: `${turno.sede} - Pomeriggio`,
+        start: startAfternoon,
+        end: endAfternoon,
+        allDay: false,
+      },
+    ];
+  }).flat();
 
   return (
     <div style={{ padding: '1rem' }}>
@@ -98,6 +142,19 @@ export default function App() {
             {criticita.map((c, idx) => <li key={idx}>{c}</li>)}
           </ul>
         </div>
+      </div>
+
+      <div style={{ marginTop: '2rem' }}>
+        <h2>Visualizzazione Stile Google Calendar</h2>
+        <FullCalendar
+          plugins={[timeGridPlugin, interactionPlugin, dayGridPlugin]}
+          initialView="timeGridWeek"
+          allDaySlot={false}
+          slotMinTime="08:00:00"
+          slotMaxTime="19:00:00"
+          events={eventiCalendario}
+          height="auto"
+        />
       </div>
     </div>
   );
